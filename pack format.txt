@@ -1,0 +1,23 @@
+.pack file notes
+Data is big endian.  
+
+Pack files have many sub packs.  Each Subpack has an 8 byte header and a list of files in the Subpack.  
+
+Subpack Header:
+
+First 4 bytes: uint.  offset to the next subpack. 0 denotes the last subpack.  
+Second 4 bytes: uint.  number of files in the sub pack 
+
+File List - Has a list of all files.  Each entry in the file list table is variable length, but has atleast 16 bytes of data.  
+
+4 bytes - string length
+string - File name.  Not NUL terminated.  
+4 bytes -  Offset into the .pack where the file is located
+4 bytes  - File Size
+4 bytes - checksum
+
+File Data
+
+offset and size are denoted in the file list.  Just seek to the offset and read in size bytes.  
+
+This pattern repeats multiple times until the first 4 bytes of the subpack header is 0.  
